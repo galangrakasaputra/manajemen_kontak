@@ -1,11 +1,20 @@
+def open_file(path):
+    with open(path, mode='r') as file:
+        list = file.readlines()
+    return list
+
+def save_list(path, list):
+    with open(path, mode='w') as file:
+        file.writelines(list)
+
 class ManageKontak:
     def __init__(self):
-        self.kontak = []
+        self.kontak = open_file('list.txt')
 
     def lihat(self):
         if self.kontak:
             for num, item in enumerate(self.kontak, start=1):
-                print(f'\n{num}. {item["Nama"]} ({item["HP"]})')
+                print(f'{num}. ' + item)
         else:
             print("tidak ada kontak")
             return 1
@@ -18,20 +27,20 @@ class ManageKontak:
         print("berhasil di tambah")
 
     def hapus(self):
-        if self.kontak:
-            for num, item in enumerate(self.kontak, start=1):
-                print(f'{num}. {item["Nama"]} ({item["HP"]})')    
+        if self.lihat() == 1:
+            return
         else:
-            print("tidak ada kontak")
-            return 1
-        
-        hapus = int(input("Kontak mana yang ingin Dihapus ? "))
-        if 0 < hapus <= len(self.kontak):
-            del self.kontak[hapus-1]
-            print("berhasil dihapus")
-        else:
-            print("Kontak Tidak ada")
-            return 1
+            try:
+                hapus = int(input("Kontak mana yang ingin Dihapus ? "))
+                if 0 < hapus <= len(self.kontak):
+                    del self.kontak[hapus-1]
+                    print("berhasil dihapus")
+                else:
+                    print("Kontak Tidak ada")
+                    return 1
+            except:
+                print("Harus Berupa Angka")
+                return 1
 
     def edit(self):
         if self.kontak:
@@ -53,6 +62,9 @@ class ManageKontak:
         else:
             print("Tidak ada Kontak yang dipilih")
             return 1
+    
+    def simpan(self):
+        save_list('list.txt', self.kontak)
 
 kontak_baru = ManageKontak()
 
@@ -75,6 +87,7 @@ while True:
     elif pilihan == 4:
         kontak_baru.edit()
     elif pilihan == 5:
+        kontak_baru.simpan()
         break
     else:
         print("Pilihan tidak ada")
